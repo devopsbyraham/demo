@@ -1,6 +1,23 @@
 name: Main Pipeline
 
 on:
+  workflow_call:
+    inputs:
+      username:
+        description: 'The user to greet'
+        required: false
+        default: 'Mona'
+        type: string
+      environment:
+        description: 'Target environment (one of: staging, production, dev, qa)'
+        required: false
+        default: 'dev'
+        type: string
+      deploy-flag:
+        description: 'Run deployment?'
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       username:
@@ -9,15 +26,10 @@ on:
         default: 'Mona'
         type: string
       environment:
-        description: 'Target environment'
+        description: 'Target environment (one of: staging, production, dev, qa)'
         required: false
         default: 'dev'
-        type: choice
-        options:
-          - staging
-          - production
-          - dev
-          - qa
+        type: string
       deploy-flag:
         description: 'Run deployment?'
         required: false
@@ -26,8 +38,13 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/reusable-build.yml
-    with:
-      username: ${{ inputs.username }}
-      environment: ${{ inputs.environment }}
-      deploy-flag: ${{ inputs.deploy-flag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show inputs
+        run: |
+          echo "username=${{ inputs.username }}"
+          echo "environment=${{ inputs.environment }}"
+          echo "deploy=${{ inputs.deploy-flag }}"
