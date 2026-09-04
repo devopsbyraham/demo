@@ -1,24 +1,18 @@
-name: Reusable Build
+name: Main Pipeline
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       username:
         description: 'The user to greet'
-        required: true
+        required: false
         default: 'Mona'
         type: string
-
       environment:
-        description: 'Target environment'
-        required: true
-        type: choice
-        options:
-          - staging
-          - production
-          - dev
-          - qa
-
+        description: 'Target environment (one of: staging, production, dev, qa)'
+        required: false
+        default: 'dev'
+        type: string
       deploy-flag:
         description: 'Run deployment?'
         required: false
@@ -27,19 +21,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          echo "Building application..."
-          echo "Build completed!"
-
-      - name: Test
-        run: echo "test is done"
-
-      - name: Deploy
-        run: echo "code is deployed"
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      username: ${{ inputs.username }}
+      environment: ${{ inputs.environment }}
+      deploy-flag: ${{ inputs.deploy-flag }}
