@@ -15,3 +15,9 @@ jobs:
         run: |
           echo "Building application..."
           echo "Build completed!"
+
+      - name: tes
+        run: echo "test is done"
+
+      - name: deploy
+        runL echo "code is deployed"
