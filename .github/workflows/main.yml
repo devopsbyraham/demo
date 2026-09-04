@@ -5,6 +5,29 @@ on:
     branches:
       - main
 
+  inputs:
+    username:
+      description: 'The user to greet'
+      required: true
+      default: 'Mona'
+      type: string
+
+    environment:
+      description: 'Target environment'
+      required: true
+      type: choice
+      options:
+        - staging
+        - production
+        - dev
+        - qa
+
+    deploy-flag:
+      description: 'Run deployment?'
+      required: false
+      type: boolean
+      default: false
+
 jobs:
   build:
     uses: ./.github/workflows/reusable-build.yml
