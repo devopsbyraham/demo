@@ -1,9 +1,33 @@
 name: Main Pipeline
 
 on:
-  workflow_dispatch: 
-
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'The user to greet'
+        required: false
+        default: 'Mona'
+        type: string
+      environment:
+        description: 'Target environment'
+        required: false
+        default: 'dev'
+        type: choice
+        options:
+          - staging
+          - production
+          - dev
+          - qa
+      deploy-flag:
+        description: 'Run deployment?'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
     uses: ./.github/workflows/reusable-build.yml
+    with:
+      username: ${{ inputs.username }}
+      environment: ${{ inputs.environment }}
+      deploy-flag: ${{ inputs.deploy-flag }}
